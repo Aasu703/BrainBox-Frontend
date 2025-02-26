@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
-import "../css/VideoCallPage.css";
+import "../css/VideoCallPage.css"; // Ensure your CSS file is imported
 
 const VideoCallPage = () => {
     const localVideoRef = useRef(null);
+    const remoteVideoRef = useRef(null); // Add remoteVideoRef with useRef
     const [localStream, setLocalStream] = useState(null);
     const [isMuted, setIsMuted] = useState(false);
     const [isVideoOff, setIsVideoOff] = useState(false);
@@ -18,8 +19,12 @@ const VideoCallPage = () => {
                 if (localVideoRef.current) {
                     localVideoRef.current.srcObject = stream;
                 }
+                // Add logic for remote stream (e.g., WebRTC peer connection)
+                // if (remoteVideoRef.current && remoteStream) {
+                //     remoteVideoRef.current.srcObject = remoteStream;
+                // }
             } catch (error) {
-                console.error("Error accessing media devices:", error);
+                console.error('Error accessing media devices:', error);
                 alert("Permission denied. Unable to access camera and microphone.");
             }
         };
@@ -67,9 +72,8 @@ const VideoCallPage = () => {
                     muted={true}
                     className={`local-video ${isVideoOff ? "video-off" : ""}`}
                 />
-                {/* Add remote video if needed */}
                 <video
-                    ref={remoteVideoRef} // Ensure remoteVideoRef is defined
+                    ref={remoteVideoRef} // Use remoteVideoRef here
                     autoPlay
                     className="remote-video"
                 />
