@@ -1,0 +1,59 @@
+/* Modern Header Styling */
+.header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo Section */
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 28px;
+    color: #ffcc00;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Navbar Styling */
+.header-nav {
+    display: flex;
+    gap: 20px;
+}
+
+/* Standard Navbar Links */
+.header-nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Home Button - Styled to Fit */
+.header-nav a:first-child {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+.header-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffcc00;
+    transform: scale(1.05);
+}

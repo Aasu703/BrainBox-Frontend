@@ -1,0 +1,35 @@
+@import './AuthCommon.css'; /* Import shared styles */
+
+/* Background image for login */
+.auth-container {
+    background-image: url('../assets/bg.jpg'); /* Change to your login background */
+}
+
+/* Login button */
+.auth-button {
+    padding: 12px;
+    background-color: #007bff; /* Blue */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: #0056b3; /* Darker blue */
+}
+
+/* Forgot Password link */
+.forgot-password {
+    display: block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}

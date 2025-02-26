@@ -1,0 +1,261 @@
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f5f7fa; /* Light background for a modern feel */
+    font-family: 'Arial', sans-serif; /* Clean, modern font */
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: linear-gradient(135deg, #4b0082, #6a0dad); /* Gradient purple for a modern look */
+    color: white;
+    padding: 20px;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2); /* Neumorphic shadow */
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease; /* Smooth animation */
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle text shadow */
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 12px 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin: 5px 0;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.sidebar nav a:hover, .sidebar nav a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px); /* Slight hover animation */
+}
+
+/* Main Content Styling */
+.main-content {
+    margin-left: 250px; /* Space for sidebar */
+    padding: 30px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #ffffff, #e9ecef); /* Subtle gradient background */
+}
+
+.welcome-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Neumorphic shadow */
+}
+
+.welcome-icon {
+    color: #4b0082;
+    font-size: 1.5rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.tasks-section, .calendar-section {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Enhanced neumorphic shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tasks-section:hover, .calendar-section:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.video-call-section {
+    margin-top: 30px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.video-call-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+    color: #4b0082;
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-icon {
+    color: #4b0082;
+    font-size: 1.25rem;
+}
+
+.meeting-button {
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #4b0082, #6a0dad);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 15px rgba(75, 0, 130, 0.3);
+}
+
+.meeting-button:hover {
+    background: linear-gradient(45deg, #6a0dad, #8b2ed6);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(75, 0, 130, 0.4);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.home-button, .logout-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 25px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-button {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+}
+
+.home-button:hover {
+    background: linear-gradient(45deg, #0056b3, #003d7a);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(0, 123, 255, 0.4);
+}
+
+.logout-button {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+}
+
+.logout-button:hover {
+    background: linear-gradient(45deg, #c82333, #bd2130);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(220, 53, 69, 0.4);
+}
+
+.button-icon {
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr; /* Stack sections on smaller screens */
+        gap: 15px;
+    }
+
+    .tasks-section, .calendar-section {
+        min-height: 250px; /* Adjust height for mobile */
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Ensure all sections have consistent modern typography */
+h2, h3 {
+    font-family: 'Poppins', sans-serif; /* Modern, clean font (install via CDN or npm) */
+    color: #333;
+    margin-bottom: 15px;
+}
+/* ... (existing CSS remains unchanged) ... */
+
+/* Chat Section Styling */
+.chat-section {
+    margin-top: 30px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.chat-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.chat-section h2 {
+    color: #4b0082;
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-section .section-icon {
+    color: #4b0082;
+    font-size: 1.25rem;
+}
+
+/* Ensure ChatBot styling integrates with dashboard */
+.chatbot {
+    max-width: 100%;
+    height: 400px; /* Adjust as needed */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}

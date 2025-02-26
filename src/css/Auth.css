@@ -1,0 +1,109 @@
+/* General reset and body styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+}
+
+/* Centered container */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('../assets/bg.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Auth box styling */
+.auth-box {
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Title styling */
+.auth-title {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Form styling */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input field styling */
+.auth-input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border 0.3s ease;
+}
+
+/* Input field focus effect */
+.auth-input:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+/* Button styling */
+.auth-button {
+    padding: 12px;
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: #218838; /* Darker green */
+}
+
+/* Message styling */
+.auth-message {
+    margin-top: 20px;
+    font-size: 1em;
+    color: #f44336; /* Red for error messages */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .auth-box {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-title {
+        font-size: 1.5em;
+    }
+}
+.user-type-selection {
+    margin: 15px 0;
+}
+
+.user-type-selection label {
+    display: block;
+    margin: 5px 0;
+}
