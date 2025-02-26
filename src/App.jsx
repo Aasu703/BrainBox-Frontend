@@ -10,6 +10,7 @@ import Calendar from "./components/Calendar/Calendar";
 import TaskProgress from "./components/TaskProgress/TaskProgress";
 import TaskTimeline from "./components/TaskTimeline/TaskTimeline";
 import ChatBot from "./components/Chat/ChatBot"; // Corrected import path
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const App = () => {
     return (
@@ -20,7 +21,11 @@ const App = () => {
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/video-call" element={<VideoCallPage />} /> {/* Add video call page route */}
+                    <Route path="/video-call" element={
+                        <ErrorBoundary>
+                            <VideoCallPage />
+                            </ErrorBoundary>} /> {/* Add video call page route with error boundary */}
+
                     <Route path="/landing-page" element={<LandingPage />} />
                     <Route path="/materials" element={<Materials />} /> {/* Add materials page route */}
                     <Route path="/calendar" element={<Calendar />} />

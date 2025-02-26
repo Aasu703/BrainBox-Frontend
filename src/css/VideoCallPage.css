@@ -1,109 +1,190 @@
+/* src/css/VideoCallPage.css */
 .video-call-container {
+    background: linear-gradient(135deg, #4b0082, #6a0dad); /* Modern purple gradient */
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh; /* Full viewport height */
-    width: 100%;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
-    text-align: center;
     padding: 20px;
+    color: white;
+    font-family: 'Poppins', sans-serif; /* Modern font */
 }
 
-/* Main video grid container */
+.video-call-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.permission-prompt, .error-message {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #333;
+    max-width: 400px;
+    width: 100%;
+}
+
+.permission-prompt p, .error-message p {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.permission-button {
+    padding: 12px 24px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.permission-button:hover {
+    background-color: #218838;
+}
+
 .video-grid {
+    border: 2px solid white;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #000; /* Black frame */
+    width: 80%; /* Larger width */
+    max-width: 1200px; /* Max width for responsiveness */
+    aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio for video */
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    width: 80%;
-    max-width: 900px;
-    height: 500px; /* Ensure enough space */
-    border: 3px solid white;
-    border-radius: 12px;
     position: relative;
-    padding: 10px;
-    overflow: hidden; /* Prevent overflow */
 }
 
-/* Styles for Remote Video (Main Video) */
-.remote-video {
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-    object-fit: cover; /* Prevent stretching */
-    background-color: black;
+.local-video, .remote-video {
+    object-fit: cover; /* Ensure video fills the frame */
+    width: 100%; /* Fill the black frame */
+    height: 100%; /* Fill the black frame */
+    border-radius: 10px;
+    display: block; /* Ensure video is visible */
 }
 
-/* Styles for Local Video (Smaller Camera) */
 .local-video {
-    width: 35%; /* Increase size slightly */
-    height: 35%;
     position: absolute;
     bottom: 15px;
-    left: 15px;
+    right: 15px;
+    width: 25%; /* Larger local video */
+    height: auto; /* Maintain aspect ratio */
     border: 2px solid white;
     border-radius: 8px;
-    object-fit: cover; /* Keeps video aspect ratio */
-    background-color: black;
+    object-fit: cover;
+    background-color: #000;
 }
 
-/* Control Button Styles */
+.video-off {
+    filter: blur(5px) grayscale(100%); /* Visual indication when video is off */
+}
+
 .controls {
     display: flex;
     gap: 15px;
-    margin-top: 15px;
+    justify-content: center;
+    align-items: center;
 }
 
 .control-button, .end-call-button {
-    padding: 14px 28px;
-    font-size: 16px;
-    font-weight: bold;
+    padding: 12px 24px;
+    font-size: 1em;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .control-button {
-    background: white;
-    color: #6a11cb;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    color: #4b0082;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .control-button:hover {
-    background: #ffffff;
-    color: #2575fc;
-    transform: scale(1.05);
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.muted {
+    background-color: #dc3545;
+    color: white;
 }
 
 .end-call-button {
-    background: #ff4d4d;
+    background-color: #dc3545;
     color: white;
-    box-shadow: 0 4px 6px rgba(255, 0, 0, 0.3);
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.4);
 }
 
 .end-call-button:hover {
-    background: #e60000;
-    transform: scale(1.05);
+    background-color: #c82333;
+    transform: translateY(-2px);
 }
 
-/* ✅ Responsive Design */
+.error-boundary {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #333;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.error-boundary h2 {
+    margin-bottom: 10px;
+    color: #dc3545;
+}
+
+.error-boundary button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.error-boundary button:hover {
+    background-color: #218838;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .video-grid {
-        flex-direction: column;
-        width: 100%;
+        width: 90%;
+        max-width: 600px;
         height: auto;
+        aspect-ratio: unset;
     }
+
     .local-video {
-        width: 40%;
-        height: 40%;
-        left: auto;
+        width: 30%;
+        height: auto;
+        bottom: 10px;
         right: 10px;
     }
-    .controls {
-        flex-direction: column;
-        gap: 10px;
+
+    .control-button, .end-call-button {
+        padding: 10px 18px;
+        font-size: 0.9em;
+    }
+
+    .permission-prompt, .error-message {
+        max-width: 300px;
     }
 }
