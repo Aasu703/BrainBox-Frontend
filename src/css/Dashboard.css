@@ -71,6 +71,15 @@
     font-size: 1.5rem;
 }
 
+.error-message {
+    color: #dc3545;
+    margin-top: 10px;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8d7da;
+    border-radius: 5px;
+}
+
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -90,6 +99,40 @@
 .tasks-section:hover, .calendar-section:hover {
     transform: translateY(-5px); /* Lift effect on hover */
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.task-form input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.add-task-button {
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+}
+
+.add-task-button:hover {
+    background-color: #218838;
 }
 
 .video-call-section {
@@ -215,11 +258,10 @@
 
 /* Ensure all sections have consistent modern typography */
 h2, h3 {
-    font-family: 'Poppins', sans-serif; /* Modern, clean font (install via CDN or npm) */
+    font-family: 'Poppins', sans-serif; /* Modern, clean font */
     color: #333;
     margin-bottom: 15px;
 }
-/* ... (existing CSS remains unchanged) ... */
 
 /* Chat Section Styling */
 .chat-section {
@@ -258,4 +300,33 @@ h2, h3 {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Task Form and Error Message Styling */
+.task-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.task-form input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    min-width: 200px;
+}
+
+@media (max-width: 768px) {
+    .task-form {
+        flex-direction: column;
+    }
+    .task-form input {
+        min-width: 100%;
+    }
 }

@@ -3,7 +3,7 @@ import "./TaskProgress.css";
 
 const TaskProgress = ({ tasks }) => {
     const totalTasks = tasks ? tasks.length : 0;
-    const completedTasks = tasks ? tasks.filter(task => task.completed).length : 0;
+    const completedTasks = tasks ? tasks.filter(task => task.status === "completed").length : 0;
     const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
     return (

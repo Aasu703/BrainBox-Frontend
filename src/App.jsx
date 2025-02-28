@@ -20,7 +20,7 @@ const App = () => {
                     <Route path="/" element={<LandingPage />} /> {/* Add landing page route */}
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/Dashboard" element={<Dashboard />} />
                     <Route path="/video-call" element={
                         <ErrorBoundary>
                             <VideoCallPage />
