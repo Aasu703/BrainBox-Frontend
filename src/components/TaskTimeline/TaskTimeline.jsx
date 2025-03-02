@@ -15,6 +15,8 @@ const TaskTimeline = ({ tasks = [] }) => {
                                 <strong>{task.title}</strong>
                                 <br />
                                 <small>📅 Due: {new Date(task.dueDate).toLocaleDateString()}</small>
+                                <br />
+                                <small>Created: {new Date(task.createdAt).toLocaleDateString()}</small>
                             </div>
                         </li>
                     ))

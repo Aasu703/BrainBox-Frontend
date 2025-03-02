@@ -1,43 +1,42 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { loginUser, signupUser } from '../services/api';
 
-// Create the AuthContext
 const AuthContext = createContext();
 
-// AuthProvider component
 export const AuthProvider = ({ children }) => {
-    const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+    // ✅ Load user and token from localStorage when app starts
+    const storedUser = JSON.parse(localStorage.getItem('user')) || null;
+    const storedToken = localStorage.getItem('token') || null;
+
     const [user, setUser] = useState(storedUser);
-    const [loading, setLoading] = useState(true);
+    const [token, setToken] = useState(storedToken);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // ✅ Update localStorage whenever user or token changes
     useEffect(() => {
-        if (user) {
+        if (user && token) {
             localStorage.setItem('user', JSON.stringify(user));
-            localStorage.setItem('userToken', user.token || '');
+            localStorage.setItem('token', token);
         } else {
             localStorage.removeItem('user');
-            localStorage.removeItem('userToken');
+            localStorage.removeItem('token');
         }
-    }, [user]);
+    }, [user, token]);
 
-    const login = async (userData) => {
+    const login = async (credentials) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await loginUser(userData);
-            const userWithToken = { 
-                id: response.user.id, 
-                name: response.user.name, 
-                email: response.user.email, 
-                role: response.user.role, 
-                token: response.token 
-            };
-            setUser(userWithToken);
+            const response = await loginUser(credentials);
+            if (!response.user || !response.token) {
+                throw new Error("Invalid server response");
+            }
+            setUser(response.user);
+            setToken(response.token);
             return response;
         } catch (err) {
             setError(err.message || "Login failed. Please try again.");
-            throw err;
         } finally {
             setLoading(false);
         }
@@ -48,18 +47,14 @@ export const AuthProvider = ({ children }) => {
         setError(null);
         try {
             const response = await signupUser(userData);
-            const userWithToken = { 
-                id: response.user.id, 
-                name: response.user.name, 
-                email: response.user.email, 
-                role: response.user.role, 
-                token: response.token 
-            };
-            setUser(userWithToken);
+            if (!response.user || !response.token) {
+                throw new Error("Invalid server response");
+            }
+            setUser(response.user);
+            setToken(response.token);
             return response;
         } catch (err) {
             setError(err.message || "Signup failed. Please try again.");
-            throw err;
         } finally {
             setLoading(false);
         }
@@ -67,31 +62,22 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setUser(null);
+        setToken(null);
         setError(null);
-        localStorage.removeItem('userToken');
+        localStorage.removeItem('token');
         localStorage.removeItem('user');
     };
 
-    const value = {
-        user,
-        login,
-        signup,
-        logout,
-        loading,
-        error,
-        setUser,
-    };
-
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{ user, token, login, signup, logout, loading, error }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
 export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (context === undefined) {
+    const context = React.useContext(AuthContext);
+    if (!context) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;

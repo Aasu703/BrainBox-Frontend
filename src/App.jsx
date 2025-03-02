@@ -9,7 +9,6 @@ import Materials from "./components/material/Materials"; // Import Material if n
 import Calendar from "./components/Calendar/Calendar";
 import TaskProgress from "./components/TaskProgress/TaskProgress";
 import TaskTimeline from "./components/TaskTimeline/TaskTimeline";
-import ChatBot from "./components/Chat/ChatBot"; // Corrected import path
 import ErrorBoundary from "./components/ErrorBoundary";
 
 const App = () => {
@@ -31,7 +30,7 @@ const App = () => {
                     <Route path="/calendar" element={<Calendar />} />
                     <Route path="/task-progress" element={<TaskProgress />} />
                     <Route path="/task-timeline" element={<TaskTimeline />} /> {/* Add task timeline page route */}
-                    <Route path="/chat" element={<ChatBot />} /> {/* Add chatbot page route */}
+                    
                 </Routes>
             </Router>
         </AuthProvider>

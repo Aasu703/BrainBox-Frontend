@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext"; // For user authentication
-import { uploadMaterial, getUserMaterials } from "../../services/api"; // New API functions
-import "./Materials.css"; // Ensure your CSS file is imported
+import { useAuth } from "../../context/AuthContext";
+import { uploadMaterial, getUserMaterials } from "../../services/api";
+import "./Materials.css";
 
 const Materials = () => {
     const [file, setFile] = useState(null);
     const [uploadMessage, setUploadMessage] = useState("");
     const [materials, setMaterials] = useState([]);
-    const { user, loading, error } = useAuth(); // Get user, loading, and error
+    const { user, loading, error: authError } = useAuth();
 
-    // Fetch user's materials on mount
     useEffect(() => {
         if (user && !loading) {
             fetchMaterials();
@@ -22,34 +21,40 @@ const Materials = () => {
 
     const handleUpload = async (e) => {
         e.preventDefault();
-        if (!file || !user) return;
+        if (!file || !user) {
+            setUploadMessage("Please select a file and ensure you are logged in.");
+            return;
+        }
 
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("Material_Type", file.type);
 
         try {
-            const response = await uploadMaterial(formData);
+            await uploadMaterial(formData);
             setUploadMessage("File uploaded successfully!");
-            fetchMaterials(); // Refresh the list
+            fetchMaterials();
         } catch (err) {
-            setUploadMessage(`Upload failed: ${err.message || "Try again."}`);
+            console.error("Upload error:", err.response?.status, err.response?.data || err.message);
+            setUploadMessage(`Upload failed: ${err.response?.status === 404 ? "Upload endpoint not found." : err.response?.data?.error || err.message || "Try again."}`);
         }
     };
 
     const fetchMaterials = async () => {
         try {
             const data = await getUserMaterials();
-            setMaterials(data);
+            setMaterials(data || []);
+            setUploadMessage(""); // Clear message on success
         } catch (err) {
-            console.error("Error fetching materials:", err);
-            setUploadMessage(`Failed to load materials: ${err.message || "Try again."}`);
+            console.error("Error fetching materials:", err.response?.status, err.response?.data || err.message);
+            setUploadMessage(`Failed to load materials: ${err.response?.status === 404 ? "Materials endpoint not found." : err.response?.data?.error || err.message || "Try again."}`);
         }
     };
 
     return (
         <div className="materials-container">
-            <h2>Materials</h2>
-            {error && <p className="error-message">{error}</p>}
+            <h2>Study Materials</h2>
+            {authError && <p className="error-message">{authError}</p>}
             {loading ? (
                 <p>Loading...</p>
             ) : (
@@ -58,12 +63,24 @@ const Materials = () => {
                         <input
                             type="file"
                             onChange={handleFileChange}
-                            accept=".pdf,.jpg,.png" // Adjust file types as needed
+                            accept=".pdf,.jpg,.png"
                             disabled={!user}
                         />
-                        <button type="submit" disabled={!user || !file}>Upload File</button>
+                        <button type="submit" disabled={!user || !file}>
+                            Upload Material
+                        </button>
                     </form>
-                    {uploadMessage && <p className="message">{uploadMessage}</p>}
+                    {uploadMessage && (
+                        <p
+                            className={
+                                uploadMessage.includes("failed")
+                                    ? "error-message"
+                                    : "success-message"
+                            }
+                        >
+                            {uploadMessage}
+                        </p>
+                    )}
                     <div className="materials-list">
                         <h3>Uploaded Materials</h3>
                         {materials.length === 0 ? (
@@ -76,10 +93,15 @@ const Materials = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        {material.fileName || "Material File"}
+                                        {material.fileName || material.filePath.split('/').pop() || "Material File"}
                                     </a>
-                                    <p>Uploaded on: {new Date(material.uploadedAt).toLocaleDateString()}</p>
-                                    <p>Type: {material.fileType}</p>
+                                    <p>
+                                        Uploaded on:{" "}
+                                        {material.Uploaded_Date
+                                            ? new Date(material.Uploaded_Date).toLocaleDateString()
+                                            : "Unknown"}
+                                    </p>
+                                    <p>Type: {material.Material_Type || "Unknown"}</p>
                                 </div>
                             ))
                         )}

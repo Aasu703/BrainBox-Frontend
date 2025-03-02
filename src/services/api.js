@@ -1,7 +1,29 @@
-// src/services/api.js
-import axios from "axios";
+import axios from 'axios';
 
-const API_URL = "http://localhost:5000"; // Match your backend URL
+const API_URL = 'http://localhost:5000';
+
+const getToken = () => localStorage.getItem('token');
+
+export const loginUser = async (userData) => {
+    if (!userData?.email || !userData?.password) {
+        throw new Error("Email and password are required");
+    }
+    try {
+        const response = await axios.post(`${API_URL}/users/login`, userData, {
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' },
+        });
+        if (response.data.token) {
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message || "Login failed";
+        console.error('Login API Error:', errorMessage, error.response?.data || error);
+        throw new Error(errorMessage);
+    }
+};
 
 export const signupUser = async (userData) => {
     try {
@@ -9,137 +31,167 @@ export const signupUser = async (userData) => {
             withCredentials: true,
             headers: { 'Content-Type': 'application/json' },
         });
+        if (response.data.token) {
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
         return response.data;
     } catch (error) {
-        throw error.response?.data || { message: "Signup failed" };
+        console.error('Signup API Error:', error.response?.data || error.message);
+        throw error;
     }
 };
-
-export const loginUser = async (userData) => {
-    console.log("Sending login request with:", userData); // Debug log
-    try {
-        const response = await axios.post(`${API_URL}/users/login`, userData, {
-            withCredentials: true,
-            headers: { 'Content-Type': 'application/json' },
-        });
-        console.log("Login response:", response.data); // Debug response
-        return response.data;
-    } catch (error) {
-        console.error("Login error from server:", error.response?.data || error.message); // Debug full error
-        throw error.response?.data || { message: "Login failed" };
-    }
-};
-export const sendMessage = async (messageData) => {
-    try {
-        const response = await axios.post(`${API_URL}/api/chat/messages`, messageData, {
-            withCredentials: true,
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}` },
-        });
-        return response.data;
-    } catch (error) {
-        throw error.response?.data || { message: "Message sending failed" };
-    }
-};
-
-export const getMessages = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/api/chat/messages`, {
-            withCredentials: true,
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}` },
-        });
-        return response.data;
-    } catch (error) {
-        throw error.response?.data || { message: "Message retrieval failed" };
-    }
-};
-
-export const getAIResponse = async (message) => {
-    try {
-        const response = await axios.post(`${API_URL}/api/chat/ai/response`, { message }, {
-            withCredentials: true,
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}` },
-        });
-        return response.data.response || "I'm not sure how to respond to that.";
-    } catch (error) {
-        throw error.response?.data || { message: "AI response failed" };
-    }
-};
-
-export const uploadMaterial = async (formData) => {
-    try {
-        const response = await axios.post(`${API_URL}/api/material/upload`, formData, {
-            withCredentials: true,
-            headers: { 
-                'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}`,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        throw error.response?.data || { message: "Material upload failed" };
-    }
-};
-
-export const getUserMaterials = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/api/material/user`, {
-            withCredentials: true,
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}` },
-        });
-        return response.data;
-    } catch (error) {
-        throw error.response?.data || { message: "Failed to load materials" };
-    }
-};
-
-// src/services/api.js
-// ... (existing imports and functions remain unchanged)
 
 export const createTask = async (taskData) => {
+    const token = getToken();
+    if (!token) throw new Error('No token found. Please log in.');
+    if (!taskData.assignedTo) throw new Error('assignedTo is required');
+    console.log('Sending task data:', taskData);
     try {
         const response = await axios.post(`${API_URL}/api/task/create`, taskData, {
-            withCredentials: true,
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}` },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         });
-        return response.data;
+        return response.data.task;
     } catch (error) {
-        throw error.response?.data || { message: "Task creation failed" };
+        console.error('Create Task Error:', error.response?.status, error.response?.data || error.message);
+        throw error;
     }
 };
 
 export const getTasks = async () => {
+    const token = getToken();
+    if (!token) throw new Error('No token found. Please log in.');
     try {
         const response = await axios.get(`${API_URL}/api/task/all`, {
-            withCredentials: true,
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}` },
+            headers: { 'Authorization': `Bearer ${token}` },
         });
-        return response.data;
+        return response.data.map(task => ({
+            id: task.id,
+            title: task.title,
+            dueDate: task.dueDate,
+            status: task.status,
+            createdAt: task.createdAt,
+            updatedAt: task.updatedAt,
+            assignedTo: task.Assignee?.id || task.assignedTo,
+            assignedBy: task.Assigner?.id || task.assignedBy
+        }));
     } catch (error) {
-        throw error.response?.data || { message: "Failed to load tasks" };
+        console.error('Get Tasks Error:', error.response?.status, error.response?.data || error.message);
+        throw error;
     }
 };
 
 export const updateTask = async (id, taskData) => {
+    const token = getToken();
+    if (!token) throw new Error('No token found. Please log in.');
     try {
         const response = await axios.put(`${API_URL}/api/task/update/${id}`, taskData, {
-            withCredentials: true,
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}` },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         });
-        return response.data;
+        return response.data.task;
     } catch (error) {
-        throw error.response?.data || { message: "Task update failed" };
+        console.error('Update Task Error:', error.response?.status, error.response?.data || error.message);
+        throw error;
     }
 };
 
 export const deleteTask = async (id) => {
+    const token = getToken();
+    if (!token) throw new Error('No token found. Please log in.');
     try {
         const response = await axios.delete(`${API_URL}/api/task/delete/${id}`, {
-            withCredentials: true,
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('userToken') || ''}` },
+            headers: { 'Authorization': `Bearer ${token}` },
         });
         return response.data;
     } catch (error) {
-        throw error.response?.data || { message: "Task deletion failed" };
+        console.error('Delete Task Error:', error.response?.status, error.response?.data || error.message);
+        throw error;
     }
 };
 
-// ... (remaining functions remain unchanged)
+export const uploadMaterial = async (formData) => {
+    const token = getToken();
+    if (!token) throw new Error('No token found. Please log in.');
+    try {
+        const response = await axios.post(`${API_URL}/api/materials/materials`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Upload Material Error:', error.response?.status, error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const getUserMaterials = async () => {
+    const token = getToken();
+    if (!token) throw new Error('No token found. Please log in.');
+    try {
+        const response = await axios.get(`${API_URL}/api/material/materials`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data.map(material => ({
+            id: material.id,
+            filePath: material.filePath,
+            fileName: material.fileName || material.filePath.split('/').pop(),
+            Uploaded_Date: material.Uploaded_Date || material.uploadedAt,
+            Material_Type: material.Material_Type || material.fileType
+        }));
+    } catch (error) {
+        console.error('Get Materials Error:', error.response?.status, error.response?.data || error.message);
+        throw error;
+    }
+};
+
+// export const sendMessage = async (messageData) => {
+//     const token = getToken();
+//     if (!token) throw new Error('No token found. Please log in.');
+//     try {
+//         const response = await axios.post(`${API_URL}/api/chat/messages`, messageData, {
+//             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+//         });
+//         return response.data;
+//     } catch (error) {
+//         console.error('Send Message Error:', error.response?.status, error.response?.data || error.message);
+//         throw error;
+//     }
+// };
+
+// export const getMessages = async ({ roomId }) => {
+//     const token = getToken();
+//     if (!token) throw new Error('No token found. Please log in.');
+//     try {
+//         const response = await axios.get(`${API_URL}/api/chat/messages?roomId=${roomId || 1}`, {
+//             headers: { 'Authorization': `Bearer ${token}` },
+//         });
+//         return response.data.map(msg => ({
+//             Message_ID: msg.Message_ID,
+//             Message_Content: msg.Message_Content,
+//             Sent_By: msg.Sent_By,
+//             Room_ID: msg.Room_ID,
+//             Sent_Time: msg.Sent_Time,
+//         }));
+//     } catch (error) {
+//         console.error('Get Messages Error:', error.response?.status, error.response?.data || error.message);
+//         throw error;
+//     }
+// };
+
+export const signalOffer = async (roomId, offerData) => {
+    const token = getToken();
+    if (!token) throw new Error('No token found. Please log in.');
+    try {
+        const response = await axios.post(`${API_URL}/api/virtualroom/signaling/${roomId}`, offerData, {
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Signaling Error:', error.response?.status, error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export { getToken };

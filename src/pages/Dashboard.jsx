@@ -6,93 +6,108 @@ import TaskProgress from "../components/TaskProgress/TaskProgress";
 import TaskTimeline from "../components/TaskTimeline/TaskTimeline";
 import Calendar from "../components/Calendar/Calendar";
 import { useAuth } from "../context/AuthContext";
-import VideoCallPage from "./VideoCallPage";
-import { FaUser, FaTasks, FaChartBar, FaCalendarAlt, FaVideo, FaSignOutAlt, FaHome, FaPlus, FaTrash } from "react-icons/fa";
 import { getTasks, createTask, updateTask, deleteTask } from "../services/api";
+import { FaUser, FaTasks, FaChartBar, FaCalendarAlt, FaVideo, FaSignOutAlt, FaHome, FaComments } from "react-icons/fa";
 import "../css/Dashboard.css";
+import Materials from "../components/material/Materials";
+import VideoCallPage from "./VideoCallPage";
 
 const Dashboard = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [tasks, setTasks] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [newTask, setNewTask] = useState({ title: "", description: "", dueDate: "", assignedTo: user?.id || null });
+    const [selectedRoom, setSelectedRoom] = useState(1);
 
-    // Fetch tasks from database on mount and user change
     useEffect(() => {
         const fetchTasks = async () => {
-            if (user) {
-                try {
-                    setLoading(true);
-                    const data = await getTasks();
-                    setTasks(data);
-                } catch (err) {
-                    setError("Failed to load tasks. Please try again.");
-                    console.error("Error fetching tasks:", err);
-                } finally {
-                    setLoading(false);
-                }
+            if (!user) {
+                setError("Please log in to view tasks.");
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError("No token found. Please log in.");
+                return;
+            }
+
+            try {
+                const fetchedTasks = await getTasks();
+                console.log("Fetched tasks:", fetchedTasks);
+                setTasks(fetchedTasks || []);
+                setError(null);
+            } catch (err) {
+                setError(`Failed to fetch tasks: ${err.response?.status === 404 ? "Tasks endpoint not found." : err.message || "Unknown error"}`);
+                console.error("Fetch error:", err.response?.status, err.response?.data || err);
             }
         };
         fetchTasks();
     }, [user]);
 
-    // Handle task creation (teacher only)
-    const handleCreateTask = async (e) => {
-        e.preventDefault();
-        if (!user || user.role !== "teacher") {
-            setError("Only teachers can create tasks.");
+    const addTask = async (taskData) => {
+        if (!user) {
+            setError("Please log in to add tasks.");
             return;
         }
         try {
-            const taskData = {
-                ...newTask,
-                dueDate: new Date(newTask.dueDate).toISOString(),
-                assignedTo: parseInt(newTask.assignedTo), // Ensure assignedTo is an integer
+            const newTask = {
+                title: taskData.title,
+                dueDate: new Date().toISOString().split('T')[0],
+                status: "pending",
+                assignedTo: user.id,
+                assignedBy: user.id,
             };
-            const response = await createTask(taskData);
-            setTasks([...tasks, response.task]);
-            setNewTask({ title: "", description: "", dueDate: "", assignedTo: user?.id || null });
+            console.log('Task to create:', newTask);
+            const createdTask = await createTask(newTask);
+            setTasks([...tasks, createdTask]);
             setError(null);
-        } catch (err) {
-            setError("Failed to create task. " + err.message);
-            console.error("Error creating task:", err);
+        } catch (error) {
+            setError(`Failed to add task: ${error.response?.status === 404 ? "Create task endpoint not found." : error.message || "Try again."}`);
+            console.error("Add task error:", error.response?.status, error.response?.data || error);
         }
     };
 
-    // Handle task update (student or teacher)
-    const handleUpdateTask = async (taskId, updates) => {
-        if (!user) return;
-        try {
-            const updatedTask = await updateTask(taskId, updates);
-            setTasks(tasks.map(task => task.id === taskId ? updatedTask.task : task));
-            setError(null);
-        } catch (err) {
-            setError("Failed to update task. " + err.message);
-            console.error("Error updating task:", err);
-        }
-    };
-
-    // Handle task deletion (teacher only)
-    const handleDeleteTask = async (taskId) => {
-        if (!user || user.role !== "teacher") {
-            setError("Only teachers can delete tasks.");
+    const deleteTask = async (taskId) => {
+        if (!user) {
+            setError("Please log in to delete tasks.");
             return;
         }
+
         try {
             await deleteTask(taskId);
-            setTasks(tasks.filter(task => task.id !== taskId));
+            setTasks(tasks.filter((task) => task.id !== taskId));
             setError(null);
-        } catch (err) {
-            setError("Failed to delete task. " + err.message);
-            console.error("Error deleting task:", err);
+        } catch (error) {
+            setError(`Failed to delete task: ${error.message || "Try again."}`);
+            console.error("Delete task error:", error.response?.status, error.response?.data || error);
+        }
+    };
+
+    const toggleTaskCompletion = async (taskId) => {
+        if (!user) {
+            setError("Please log in to update tasks.");
+            return;
+        }
+
+        const task = tasks.find(t => t.id === taskId);
+        const newStatus = task.status === "completed" ? "pending" : "completed";
+        
+        try {
+            const updatedTask = await updateTask(taskId, { status: newStatus });
+            setTasks(tasks.map(t => t.id === taskId ? updatedTask : t));
+            setError(null);
+        } catch (error) {
+            setError(`Failed to update task: ${error.message || "Try again."}`);
+            console.error("Update task error:", error.response?.status, error.response?.data || error);
         }
     };
 
     const handleLogout = () => {
         logout();
         navigate("/landing-page");
+        setTasks([]);
+        setError(null);
     };
 
     return (
@@ -101,79 +116,39 @@ const Dashboard = () => {
             <div className="main-content">
                 <div className="welcome-header">
                     <FaUser className="welcome-icon" />
-                    <h2>Welcome, {user ? user.name : "Guest"}</h2>
+                    <h2>Welcome, {user ? user.name : "Guest"} {error && <span className="error-message">{error}</span>}</h2>
                 </div>
-                {error && <p className="error-message">{error}</p>}
-                {loading ? (
-                    <p>Loading tasks...</p>
-                ) : (
-                    <>
-                        <div className="dashboard-grid">
-                            <div className="tasks-section">
-                                {user?.role === "teacher" && (
-                                    <form onSubmit={handleCreateTask} className="task-form">
-                                        <input
-                                            type="text"
-                                            name="title"
-                                            value={newTask.title}
-                                            onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                                            placeholder="Task Title"
-                                            required
-                                        />
-                                        <input
-                                            type="text"
-                                            name="description"
-                                            value={newTask.description}
-                                            onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                                            placeholder="Description"
-                                        />
-                                        <input
-                                            type="date"
-                                            name="dueDate"
-                                            value={newTask.dueDate}
-                                            onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                                            required
-                                        />
-                                        <input
-                                            type="number"
-                                            name="assignedTo"
-                                            value={newTask.assignedTo}
-                                            onChange={(e) => setNewTask({ ...newTask, assignedTo: e.target.value })}
-                                            placeholder="Assign to User ID"
-                                            required
-                                        />
-                                        <button type="submit" className="add-task-button"><FaPlus /> Add Task</button>
-                                    </form>
-                                )}
-                                <TodayTasks
-                                    tasks={tasks}
-                                    addTask={user?.role === "teacher" ? handleCreateTask : null}
-                                    deleteTask={user?.role === "teacher" ? handleDeleteTask : null}
-                                    toggleTaskCompletion={handleUpdateTask}
-                                />
-                                <TaskProgress tasks={tasks} />
-                            </div>
-                            <div className="calendar-section">
-                                <TaskTimeline tasks={tasks} />
-                                <Calendar tasks={tasks} />
-                            </div>
-                        </div>
-                        <div className="video-call-section">
-                            <h2 className="section-title">Start a Meeting <FaVideo className="section-icon" /></h2>
-                            <button onClick={() => window.open("/video-call", "_blank")} className="meeting-button">
-                                Start Meeting
-                            </button>
-                        </div>
-                        <div className="action-buttons">
-                            <button onClick={handleLogout} className="logout-button">
-                                <FaSignOutAlt className="button-icon" /> Logout
-                            </button>
-                            <Link to="/landing-page" className="home-button">
-                                <FaHome className="button-icon" /> Home
-                            </Link>
-                        </div>
-                    </>
-                )}
+                <div className="dashboard-grid">
+                    <div className="tasks-section">
+                        <TodayTasks
+                            tasks={tasks}
+                            addTask={addTask}
+                            deleteTask={deleteTask}
+                            toggleTaskCompletion={toggleTaskCompletion}
+                        />
+                        <TaskProgress tasks={tasks} />
+                    </div>
+                    <div className="calendar-section">
+                        <TaskTimeline tasks={tasks} />
+                        <Calendar tasks={tasks} />
+                    </div>
+                </div>
+                <div className="materials-section">
+                    <h2 className="section-title">Upload Study Materials <FaTasks className="section-icon" /></h2>
+                    <Materials />
+                </div>
+                <div className="video-call-section">
+                    <h2 className="section-title">Start a Meeting <FaVideo className="section-icon" /></h2>
+                    <VideoCallPage roomId={selectedRoom} />
+                </div>
+                <div className="action-buttons">
+                    <button onClick={handleLogout} className="logout-button">
+                        <FaSignOutAlt className="button-icon" /> Logout
+                    </button>
+                    <Link to="/landing-page" className="home-button">
+                        <FaHome className="button-icon" /> Home
+                    </Link>
+                </div>
             </div>
         </div>
     );

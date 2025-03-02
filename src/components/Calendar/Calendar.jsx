@@ -21,8 +21,30 @@ const Calendar = ({ tasks = [] }) => {
     const isTaskDue = (day) => {
         const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
         return tasks.some(task => {
-            const taskDueDate = new Date(task.dueDate).toISOString().split('T')[0];
-            return taskDueDate === formattedDate && task.status === "pending";
+            if (!task.dueDate) return false;
+            const taskDueDate = new Date(task.dueDate);
+            if (isNaN(taskDueDate.getTime())) return false;
+            return taskDueDate.toISOString().split('T')[0] === formattedDate && task.status === "pending";
+        });
+    };
+
+    const isTaskCreated = (day) => {
+        const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        return tasks.some(task => {
+            if (!task.createdAt) return false;
+            const createdDate = new Date(task.createdAt);
+            if (isNaN(createdDate.getTime())) return false;
+            return createdDate.toISOString().split('T')[0] === formattedDate;
+        });
+    };
+
+    const isTaskCompleted = (day) => {
+        const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        return tasks.some(task => {
+            if (!task.updatedAt || task.status !== "completed") return false;
+            const completedDate = new Date(task.updatedAt);
+            if (isNaN(completedDate.getTime())) return false;
+            return completedDate.toISOString().split('T')[0] === formattedDate;
         });
     };
 
@@ -41,7 +63,11 @@ const Calendar = ({ tasks = [] }) => {
                     return (
                         <div
                             key={day}
-                            className={`calendar-day ${isTaskDue(day) ? "task-due" : ""}`}
+                            className={`calendar-day 
+                                ${isTaskDue(day) ? "task-due" : ""} 
+                                ${isTaskCreated(day) ? "task-created" : ""} 
+                                ${isTaskCompleted(day) ? "task-completed" : ""}
+                            `}
                         >
                             {day}
                         </div>
