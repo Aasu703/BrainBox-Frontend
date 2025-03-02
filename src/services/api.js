@@ -45,11 +45,12 @@ export const signupUser = async (userData) => {
 export const createTask = async (taskData) => {
     const token = getToken();
     if (!token) throw new Error('No token found. Please log in.');
-    if (!taskData.assignedTo) throw new Error('assignedTo is required');
-    console.log('Sending task data:', taskData);
     try {
-        const response = await axios.post(`${API_URL}/api/task/create`, taskData, {
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        const response = await axios.post('http://localhost:5000/api/task/create', taskData, {
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}` 
+            },
         });
         return response.data.task;
     } catch (error) {
@@ -57,6 +58,7 @@ export const createTask = async (taskData) => {
         throw error;
     }
 };
+
 
 export const getTasks = async () => {
     const token = getToken();
@@ -130,16 +132,10 @@ export const getUserMaterials = async () => {
     const token = getToken();
     if (!token) throw new Error('No token found. Please log in.');
     try {
-        const response = await axios.get(`${API_URL}/api/material/materials`, {
+        const response = await axios.get(`${API_URL}/api/materials/getmaterial`, {
             headers: { Authorization: `Bearer ${token}` },
         });
-        return response.data.map(material => ({
-            id: material.id,
-            filePath: material.filePath,
-            fileName: material.fileName || material.filePath.split('/').pop(),
-            Uploaded_Date: material.Uploaded_Date || material.uploadedAt,
-            Material_Type: material.Material_Type || material.fileType
-        }));
+        return response.data; // Let backend return the raw data
     } catch (error) {
         console.error('Get Materials Error:', error.response?.status, error.response?.data || error.message);
         throw error;

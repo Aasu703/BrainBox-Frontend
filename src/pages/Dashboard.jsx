@@ -50,21 +50,31 @@ const Dashboard = () => {
             setError("Please log in to add tasks.");
             return;
         }
+        console.log('Task data being sent:', taskData);
+    
+        const taskToCreate = {
+            ...taskData,
+            dueDate: '2025-03-02', // Adjust as needed (consider making dynamic)
+            status: 'pending',
+            assignedTo: user.id || 1, // Match backend field name
+            assignedBy: user.id || 1,
+        };
+        console.log('Task to create:', taskToCreate);
+    
         try {
-            const newTask = {
-                title: taskData.title,
-                dueDate: new Date().toISOString().split('T')[0],
-                status: "pending",
-                assignedTo: user.id,
-                assignedBy: user.id,
-            };
-            console.log('Task to create:', newTask);
-            const createdTask = await createTask(newTask);
-            setTasks([...tasks, createdTask]);
+            console.log('Calling createTask with URL:', 'http://localhost:5000/api/task/create'); // Debug URL
+            const newTask = await createTask(taskToCreate); // Use API service function
+            console.log('Response from createTask:', newTask);
+            setTasks([...tasks, newTask]);
             setError(null);
+            console.log('Task added:', newTask);
         } catch (error) {
-            setError(`Failed to add task: ${error.response?.status === 404 ? "Create task endpoint not found." : error.message || "Try again."}`);
-            console.error("Add task error:", error.response?.status, error.response?.data || error);
+            setError(`Failed to add task: ${error.message || "Try again."}`);
+            console.error('Add task error:', error);
+            if (error.response) {
+                console.error('Response status:', error.response.status);
+                console.error('Response data:', error.response.data);
+            }
         }
     };
 
@@ -104,12 +114,11 @@ const Dashboard = () => {
     };
 
     const handleLogout = () => {
-        logout();
-        navigate("/landing-page");
-        setTasks([]);
-        setError(null);
-    };
-
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        
+        navigate("/Landing");
+      };
     return (
         <div className="dashboard">
             <Sidebar />

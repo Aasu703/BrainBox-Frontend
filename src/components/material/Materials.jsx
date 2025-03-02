@@ -27,28 +27,51 @@ const Materials = () => {
         }
 
         const formData = new FormData();
-        formData.append("file", file);
-        formData.append("Material_Type", file.type);
+        formData.append("filePath", file);
+        formData.append("fileType", file.type);
+        formData.append("uploadedBy", user.id);
 
         try {
             await uploadMaterial(formData);
             setUploadMessage("File uploaded successfully!");
+            setFile(null);
             fetchMaterials();
         } catch (err) {
-            console.error("Upload error:", err.response?.status, err.response?.data || err.message);
-            setUploadMessage(`Upload failed: ${err.response?.status === 404 ? "Upload endpoint not found." : err.response?.data?.error || err.message || "Try again."}`);
+            console.error("Upload error:", err);
+            setUploadMessage(
+                `Upload failed: ${
+                    err.message === "No token found. Please log in."
+                        ? "Please log in first"
+                        : err.response?.data?.message || "Server error"
+                }`
+            );
         }
     };
 
     const fetchMaterials = async () => {
         try {
             const data = await getUserMaterials();
-            setMaterials(data || []);
-            setUploadMessage(""); // Clear message on success
+            // Filter materials based on user role and ownership
+            const filteredMaterials = user.role === "teacher" 
+                ? data 
+                : data.filter(material => material.uploadedBy === user.id);
+            setMaterials(filteredMaterials || []);
+            setUploadMessage("");
         } catch (err) {
-            console.error("Error fetching materials:", err.response?.status, err.response?.data || err.message);
-            setUploadMessage(`Failed to load materials: ${err.response?.status === 404 ? "Materials endpoint not found." : err.response?.data?.error || err.message || "Try again."}`);
+            console.error("Error fetching materials:", err);
+            setUploadMessage(
+                `Failed to load materials: ${
+                    err.message === "No token found. Please log in."
+                        ? "Please log in first"
+                        : err.response?.data?.message || "Server error"
+                }`
+            );
         }
+    };
+
+    const getFileName = (filePath) => {
+        if (!filePath) return "Unknown";
+        return filePath.split(/[\\/]/).pop();
     };
 
     return (
@@ -65,6 +88,7 @@ const Materials = () => {
                             onChange={handleFileChange}
                             accept=".pdf,.jpg,.png"
                             disabled={!user}
+                            value={file ? undefined : ""}
                         />
                         <button type="submit" disabled={!user || !file}>
                             Upload Material
@@ -73,7 +97,7 @@ const Materials = () => {
                     {uploadMessage && (
                         <p
                             className={
-                                uploadMessage.includes("failed")
+                                uploadMessage.includes("failed") || uploadMessage.includes("error")
                                     ? "error-message"
                                     : "success-message"
                             }
@@ -89,19 +113,19 @@ const Materials = () => {
                             materials.map((material) => (
                                 <div key={material.id} className="material-item">
                                     <a
-                                        href={`http://localhost:5000/uploads/${material.filePath.split('/').pop()}`}
+                                        href={`http://localhost:5000/uploads/${getFileName(material.filePath)}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        {material.fileName || material.filePath.split('/').pop() || "Material File"}
+                                        {getFileName(material.filePath)}
                                     </a>
                                     <p>
                                         Uploaded on:{" "}
-                                        {material.Uploaded_Date
-                                            ? new Date(material.Uploaded_Date).toLocaleDateString()
+                                        {material.uploadedAt
+                                            ? new Date(material.uploadedAt).toLocaleDateString()
                                             : "Unknown"}
                                     </p>
-                                    <p>Type: {material.Material_Type || "Unknown"}</p>
+                                    <p>Type: {material.fileType || "Unknown"}</p>
                                 </div>
                             ))
                         )}

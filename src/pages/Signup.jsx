@@ -27,7 +27,7 @@ const Signup = () => {
       localStorage.setItem("username", res.user.name);
       localStorage.setItem("role", res.user.role);
       alert("Signup Successful!");
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       console.error("Signup error:", err); // Debug log
       setError(err.message || "Signup failed. Try again.");
