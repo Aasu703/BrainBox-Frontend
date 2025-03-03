@@ -1,190 +1,143 @@
-/* src/css/VideoCallPage.css */
+/* VideoCallPage.css */
 .video-call-container {
-    background: linear-gradient(135deg, #4b0082, #6a0dad); /* Modern purple gradient */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    color: white;
-    font-family: 'Poppins', sans-serif; /* Modern font */
-}
-
-.video-call-title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-align: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.permission-prompt, .error-message {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    color: #333;
-    max-width: 400px;
-    width: 100%;
-}
-
-.permission-prompt p, .error-message p {
-    margin-bottom: 15px;
-    font-size: 1.1em;
-}
-
-.permission-button {
-    padding: 12px 24px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.permission-button:hover {
-    background-color: #218838;
-}
-
-.video-grid {
-    border: 2px solid white;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8fafc;
     border-radius: 12px;
-    overflow: hidden;
-    background-color: #000; /* Black frame */
-    width: 80%; /* Larger width */
-    max-width: 1200px; /* Max width for responsiveness */
-    aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio for video */
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.local-video, .remote-video {
-    object-fit: cover; /* Ensure video fills the frame */
-    width: 100%; /* Fill the black frame */
-    height: 100%; /* Fill the black frame */
-    border-radius: 10px;
-    display: block; /* Ensure video is visible */
-}
-
-.local-video {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    width: 25%; /* Larger local video */
-    height: auto; /* Maintain aspect ratio */
-    border: 2px solid white;
-    border-radius: 8px;
-    object-fit: cover;
-    background-color: #000;
-}
-
-.video-off {
-    filter: blur(5px) grayscale(100%); /* Visual indication when video is off */
-}
-
-.controls {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-}
-
-.control-button, .end-call-button {
-    padding: 12px 24px;
-    font-size: 1em;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.control-button {
-    background-color: #fff;
-    color: #4b0082;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.control-button:hover {
-    background-color: #e9ecef;
-    transform: translateY(-2px);
-}
-
-.muted {
-    background-color: #dc3545;
-    color: white;
-}
-
-.end-call-button {
-    background-color: #dc3545;
-    color: white;
-    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.4);
-}
-
-.end-call-button:hover {
-    background-color: #c82333;
-    transform: translateY(-2px);
-}
-
-.error-boundary {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+  
+  .video-call-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
     text-align: center;
-    color: #333;
-    max-width: 500px;
-    margin: 20px auto;
-}
-
-.error-boundary h2 {
-    margin-bottom: 10px;
-    color: #dc3545;
-}
-
-.error-boundary button {
-    padding: 10px 20px;
-    background-color: #28a745;
+  }
+  
+  .permission-prompt {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin: 2rem 0;
+  }
+  
+  .permission-button {
+    background-color: #3b82f6;
     color: white;
     border: none;
     border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.error-boundary button:hover {
-    background-color: #218838;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
+    transition: background-color 0.2s ease;
+    margin-top: 1rem;
+  }
+  
+  .permission-button:hover {
+    background-color: #2563eb;
+  }
+  
+  .error-message {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-left: 4px solid #ef4444;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    text-align: center;
+  }
+  
+  .video-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
     .video-grid {
-        width: 90%;
-        max-width: 600px;
-        height: auto;
-        aspect-ratio: unset;
+      grid-template-columns: 1fr 2fr;
     }
-
-    .local-video {
-        width: 30%;
-        height: auto;
-        bottom: 10px;
-        right: 10px;
-    }
-
-    .control-button, .end-call-button {
-        padding: 10px 18px;
-        font-size: 0.9em;
-    }
-
-    .permission-prompt, .error-message {
-        max-width: 300px;
-    }
-}
+  }
+  
+  .local-video, .remote-video {
+    width: 100%;
+    border-radius: 8px;
+    background-color: #0f172a;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .local-video {
+    transform: scaleX(-1); /* Mirror local video */
+  }
+  
+  .video-off {
+    background-color: #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem 0;
+  }
+  
+  .control-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 50px;
+    border: none;
+    background-color: #f1f5f9;
+    color: #334155;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .control-button:hover {
+    background-color: #e2e8f0;
+  }
+  
+  .control-button.muted {
+    background-color: #dbeafe;
+    color: #3b82f6;
+  }
+  
+  .control-button.video-off {
+    background-color: #dbeafe;
+    color: #3b82f6;
+  }
+  
+  .end-call-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 50px;
+    border: none;
+    background-color: #ef4444;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .end-call-button:hover {
+    background-color: #dc2626;
+  }
