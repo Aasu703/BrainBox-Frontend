@@ -1,34 +1,107 @@
-/* Sidebar Styling */
 .sidebar {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     width: 250px;
-    background: linear-gradient(180deg, #232526, #414345); /* Dark Gradient */
-    color: white;
-    padding: 25px;
-    height: 100vh;
-    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Sidebar Navigation */
-.sidebar nav {
+    height: 100%;
+    position: sticky;
+    top: 1.5rem;
+  }
+  
+  .sidebar h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f1f5f9;
+  }
+  
+  .sidebar nav {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-}
-
-/* Sidebar Links */
-.sidebar a {
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
+    gap: 0.5rem;
+  }
+  
+  .sidebar a {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: #64748b;
     text-decoration: none;
-    padding: 12px 18px;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Hover Effects */
-.sidebar a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffcc00;
-    transform: scale(1.05);
-}
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .sidebar a:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  .sidebar a.active {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    border-left: 3px solid #3b82f6;
+  }
+  
+  .sidebar .chat-button,
+  .sidebar .meeting-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .sidebar .chat-button:hover,
+  .sidebar .meeting-button:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  .sidebar .meeting-button {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    border-color: #bfdbfe;
+  }
+  
+  .sidebar .meeting-button:hover {
+    background-color: #dbeafe;
+    color: #2563eb;
+  }
+  
+  @media (max-width: 1024px) {
+    .sidebar {
+      width: 220px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar {
+      position: static;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    
+    .sidebar nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .sidebar a, 
+    .sidebar .chat-button, 
+    .sidebar .meeting-button {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+    }
+  }
+  
