@@ -1,14 +1,13 @@
-import { useState, useContext } from "react";
-import { loginUser } from "../services/api";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthContext"; // Ensure this path is correct
+import { useAuth } from "../context/AuthContext";
 import "../css/Auth.css";
 
 const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth(); // ✅ Use context-based login
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -19,23 +18,15 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await loginUser(userData);
-      console.log("API Response:", res); // Debugging
+      const res = await login(userData); // ✅ Calls AuthContext login
 
-      if (!res || !res.user || !res.token) {
+      if (!res) {
         setError("Invalid response from server.");
         return;
       }
 
-      // Store token and user in localStorage
-      localStorage.setItem("token", res.token);
-      localStorage.setItem("user", JSON.stringify(res.user)); // Store entire user object
-
-      // Update global auth state
-      login(res.user, res.token);
-
       alert("Login Successful!");
-      navigate("/");
+      navigate("/"); // Redirect to home
     } catch (err) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Try again.");

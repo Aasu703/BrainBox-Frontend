@@ -330,3 +330,88 @@ h2, h3 {
         min-width: 100%;
     }
 }
+
+/* Dashboard.css */
+
+.error-message {
+    display: inline-block;
+    background-color: #ffe6e6;
+    color: #d9534f;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-left: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease;
+}
+
+.error-message:hover {
+    opacity: 0.9;
+}
+
+.welcome-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.materials-section {
+    margin-top: 20px;
+}
+
+.materials-list {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.material-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.material-content {
+    flex: 1;
+    padding: 10px 15px;
+    color: #333;
+    font-size: 16px;
+}
+
+.material-delete-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.material-item:hover .material-delete-btn {
+    transform: translateX(0);
+}
+
+.material-delete-btn:hover {
+    background-color: #c9302c;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.section-icon {
+    font-size: 20px;
+}

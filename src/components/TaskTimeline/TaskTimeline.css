@@ -1,33 +1,91 @@
 .task-timeline {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.task-timeline h2 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-ul {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .task-timeline h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+  }
+  
+  .task-timeline ul {
     list-style: none;
     padding: 0;
-}
-
-.timeline-item {
-    padding: 10px;
-    margin-bottom: 10px;
-    background: #f9f9f9;
-    border-left: 4px solid #6a11cb;
-    border-radius: 4px;
-}
-
-.timeline-item.completed {
-    border-left-color: #28a745;
-}
-
-.no-tasks {
-    color: #6c757d;
-}
+    margin: 0;
+    position: relative;
+  }
+  
+  .task-timeline ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 12px;
+    width: 2px;
+    background-color: #e2e8f0;
+  }
+  
+  .timeline-item {
+    padding-left: 40px;
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    background-color: #64748b;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  .timeline-item.completed::before {
+    background-color: #22c55e;
+  }
+  
+  .task-details {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .timeline-item:hover .task-details {
+    transform: translateX(5px);
+  }
+  
+  .task-details strong {
+    display: block;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+  
+  .task-details small {
+    color: #64748b;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  
+  .no-tasks {
+    padding: 1rem;
+    text-align: center;
+    color: #64748b;
+  }
+  
+  @media (max-width: 768px) {
+    .timeline-item {
+      padding-left: 30px;
+    }
+    
+    .task-details {
+      padding: 0.75rem;
+    }
+  }

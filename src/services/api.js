@@ -46,7 +46,7 @@ export const createTask = async (taskData) => {
     const token = getToken();
     if (!token) throw new Error('No token found. Please log in.');
     try {
-        const response = await axios.post('http://localhost:5000/api/task/create', taskData, {
+        const response = await axios.post(`${API_URL}/api/task/create`, taskData, {
             headers: { 
                 'Content-Type': 'application/json', 
                 'Authorization': `Bearer ${token}` 
@@ -58,7 +58,6 @@ export const createTask = async (taskData) => {
         throw error;
     }
 };
-
 
 export const getTasks = async () => {
     const token = getToken();
@@ -100,10 +99,12 @@ export const updateTask = async (id, taskData) => {
 export const deleteTask = async (id) => {
     const token = getToken();
     if (!token) throw new Error('No token found. Please log in.');
+    console.log("Deleting task with ID:", id, "Token:", token);
     try {
         const response = await axios.delete(`${API_URL}/api/task/delete/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` },
         });
+        console.log("Delete task response:", response.data);
         return response.data;
     } catch (error) {
         console.error('Delete Task Error:', error.response?.status, error.response?.data || error.message);
@@ -115,7 +116,7 @@ export const uploadMaterial = async (formData) => {
     const token = getToken();
     if (!token) throw new Error('No token found. Please log in.');
     try {
-        const response = await axios.post(`${API_URL}/api/materials/materials`, formData, {
+        const response = await axios.post(`${API_URL}/api/materials`, formData, { // Correct endpoint
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`,
@@ -135,46 +136,29 @@ export const getUserMaterials = async () => {
         const response = await axios.get(`${API_URL}/api/materials/getmaterial`, {
             headers: { Authorization: `Bearer ${token}` },
         });
-        return response.data; // Let backend return the raw data
+        return response.data;
     } catch (error) {
         console.error('Get Materials Error:', error.response?.status, error.response?.data || error.message);
         throw error;
     }
 };
 
-// export const sendMessage = async (messageData) => {
-//     const token = getToken();
-//     if (!token) throw new Error('No token found. Please log in.');
-//     try {
-//         const response = await axios.post(`${API_URL}/api/chat/messages`, messageData, {
-//             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-//         });
-//         return response.data;
-//     } catch (error) {
-//         console.error('Send Message Error:', error.response?.status, error.response?.data || error.message);
-//         throw error;
-//     }
-// };
-
-// export const getMessages = async ({ roomId }) => {
-//     const token = getToken();
-//     if (!token) throw new Error('No token found. Please log in.');
-//     try {
-//         const response = await axios.get(`${API_URL}/api/chat/messages?roomId=${roomId || 1}`, {
-//             headers: { 'Authorization': `Bearer ${token}` },
-//         });
-//         return response.data.map(msg => ({
-//             Message_ID: msg.Message_ID,
-//             Message_Content: msg.Message_Content,
-//             Sent_By: msg.Sent_By,
-//             Room_ID: msg.Room_ID,
-//             Sent_Time: msg.Sent_Time,
-//         }));
-//     } catch (error) {
-//         console.error('Get Messages Error:', error.response?.status, error.response?.data || error.message);
-//         throw error;
-//     }
-// };
+export const deleteMaterial = async (materialId) => {
+    const token = getToken();
+    if (!token) throw new Error('No token found. Please log in.');
+    console.log("Deleting material with ID:", materialId, "Token:", token);
+    console.log("Request URL:", `${API_URL}/api/materials/delete/${materialId}`);
+    try {
+        const response = await axios.delete(`${API_URL}/api/materials/delete/${materialId}`, {
+            headers: { 'Authorization': `Bearer ${token}` },
+        });
+        console.log("Delete material response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Delete Material Error:', error.response?.status, error.response?.data || error.message);
+        throw error;
+    }
+};
 
 export const signalOffer = async (roomId, offerData) => {
     const token = getToken();
