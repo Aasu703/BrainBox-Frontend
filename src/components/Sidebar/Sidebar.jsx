@@ -20,11 +20,11 @@ const Sidebar = () => {
         <div className="sidebar">
             <h2>Dashboard</h2>
             <nav>
-                <NavLink to="/dashboard" end>Dashboard</NavLink>
-                <NavLink to="/tasks">My Tasks</NavLink>
-                {user?.role === "teacher" && <NavLink to="/manage-tasks">Manage Tasks</NavLink>}
-                <NavLink to="/progress">Progress</NavLink>
-                <NavLink to="/timeline">Timeline</NavLink>
+                {/* <NavLink to="/dashboard" end>Dashboard</NavLink> */}
+                {/* <NavLink to="/task-progress">My Tasks</NavLink> */}
+                {/* {user?.role === "teacher" && <NavLink to="/manage-tasks">Manage Tasks</NavLink>} */}
+                {/* <NavLink to="/progress">Progress</NavLink> */}
+                {/* <NavLink to="/task-timeline">Timeline</NavLink> */}
                 <NavLink to="/calendar">Calendar</NavLink>
                 <NavLink to="/materials">Materials</NavLink>
                 <button onClick={openChat} className="chat-button">

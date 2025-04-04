@@ -10,6 +10,7 @@ import Calendar from "./components/Calendar/Calendar";
 import TaskProgress from "./components/TaskProgress/TaskProgress";
 import TaskTimeline from "./components/TaskTimeline/TaskTimeline";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Chat from "./components/Chat/Chat";
 
 const ProtectedRoute = ({ element }) => {
     const token = localStorage.getItem("token");
@@ -32,6 +33,7 @@ const App = () => {
                     <Route path="/calendar" element={<ProtectedRoute element={<Calendar />} />} />
                     <Route path="/task-progress" element={<ProtectedRoute element={<TaskProgress />} />} />
                     <Route path="/task-timeline" element={<ProtectedRoute element={<TaskTimeline />} />} />
+                    <Route path="/chat" element={<ProtectedRoute element={<Chat />} />} />
                 </Routes>
             </Router>
         </AuthProvider>
